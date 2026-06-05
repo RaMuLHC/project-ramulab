@@ -1,0 +1,140 @@
+@import url('https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400;1,700&family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&family=Special+Elite&family=Zhi+Mang+Xing&family=Noto+Serif+TC:wght@400;700&family=Noto+Sans+TC:wght@400;500;700&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-typewriter: "Courier Prime", "Special Elite", monospace;
+  --font-special: "Special Elite", "Courier Prime", monospace;
+  --font-serif: "Noto Serif TC", "Playfair Display", Georgia, serif;
+  --font-sans: "Noto Sans TC", "Inter", sans-serif;
+  --font-stamp: "Zhi Mang Xing", cursive, serif;
+
+  --color-kraft-50: #fbf8f3;
+  --color-kraft-100: #f4eae1;
+  --color-kraft-200: #e8d0bd;
+  --color-kraft-300: #dcb69c;
+  --color-kraft-400: #c69b7b;
+  --color-kraft-500: #aa7a59;
+  --color-kraft-600: #8c5d3f;
+  --color-kraft-700: #6e442c;
+  --color-kraft-800: #50311f;
+  --color-kraft-900: #381f12;
+  --color-ink-950: #1d1b18;
+}
+
+/* Base style resets */
+body {
+  font-family: var(--font-sans);
+  background-color: #cca070;
+  color: #3d2b1f;
+}
+
+/* Custom background texture for physical kraft paper with Artistic Flair noise grid */
+.kraft-texture {
+  background-color: #cca070;
+  background-image: 
+    radial-gradient(#b48a5c 1px, transparent 1px);
+  background-size: 20px 20px;
+  background-position: 0 0;
+}
+
+/* Custom noise overlay to simulate organic fibers */
+.paper-noise {
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.16'/%3E%3C/svg%3E");
+}
+
+/* Shorthand for card text */
+.typewriter-text {
+  font-family: var(--font-typewriter);
+  line-height: 1.6;
+}
+
+/* Ledger paper pattern */
+.ledger-grid {
+  background-size: 100% 28px;
+  background-image: linear-gradient(rgba(201, 176, 138, 0.25) 1px, transparent 1px);
+}
+
+/* Overlapping effect helper */
+.card-stack {
+  position: relative;
+}
+
+/* Retro Stamp effect */
+.ink-stamp {
+  font-family: var(--font-special);
+  transform: rotate(-8deg);
+  opacity: 0.85;
+  mix-blend-mode: multiply;
+  border-radius: 4px;
+  box-shadow: inset 0 0 2px rgba(180, 4, 4, 0.4);
+}
+
+/* Paper Curl hover effect on bottom-right corner with Artistic Flair shadows */
+.paper-curl-card {
+  position: relative;
+  background-color: #fdf5e6;
+  border: 1px solid #c9b08a;
+  box-shadow: 8px 8px 20px rgba(0, 0, 0, 0.15);
+  transition: transform 0.3s cubic-bezier(0.165, 0.84, 0.44, 1), box-shadow 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
+  transform-origin: center center;
+}
+
+/* Custom corner dog-ear overlay that folds in on hover */
+.paper-curl-card::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 40px;
+  height: 40px;
+  background: linear-gradient(135deg, transparent 50%, rgba(0,0,0,0.05) 50%, rgba(0,0,0,0.1) 100%);
+  transition: all 0.3s ease;
+  z-index: 10;
+  pointer-events: none;
+}
+
+/* Standard curling on card hover */
+.paper-curl-card:hover {
+  transform: translateY(-5px) rotate(0.5deg);
+  box-shadow: 
+    12px 14px 28px rgba(61, 43, 31, 0.2),
+    4px 6px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Make dog-ear fold active on hover */
+.paper-curl-card:hover::after {
+  width: 60px;
+  height: 60px;
+  background: linear-gradient(135deg, transparent 45%, #d9c9b0 50%, #c9b08a 100%);
+  box-shadow: -5px -5px 10px rgba(0,0,0,0.1);
+}
+
+/* Vintage metal clips and stamps */
+.brass-fastener {
+  background: radial-gradient(circle at 4px 4px, #eec170 0%, #aa7c11 70%, #664600 100%);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.4);
+}
+
+.copper-fastener {
+  background: radial-gradient(circle at 4.5px 4.5px, #fbc4ab 0%, #a44a3f 70%, #5c2018 100%);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.4);
+}
+
+/* Custom Scrollbar for archive containers */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-track {
+  background: #ecdcc9;
+  border-left: 1px solid rgba(140, 93, 63, 0.15);
+}
+::-webkit-scrollbar-thumb {
+  background: #aa7a59;
+  border-radius: 0px;
+  border: 2px solid #ecdcc9;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #8c5d3f;
+}
+
