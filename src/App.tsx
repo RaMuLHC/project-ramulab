@@ -85,10 +85,12 @@ export default function App() {
 
   // Google Sheets Interlink states initialized from localStorage, falling back to Vite environment defaults for visitors
   const [sheetUrl, setSheetUrl] = useState(() => {
-    return localStorage.getItem('ramulab_sheet_url') || (import.meta as any).env.VITE_DEFAULT_SHEET_URL || '';
+    // @ts-ignore
+    return localStorage.getItem('ramulab_sheet_url') || import.meta.env.VITE_DEFAULT_SHEET_URL || '';
   });
   const [sheetName, setSheetName] = useState(() => {
-    return localStorage.getItem('ramulab_sheet_name') || (import.meta as any).env.VITE_DEFAULT_SHEET_NAME || '';
+    // @ts-ignore
+    return localStorage.getItem('ramulab_sheet_name') || import.meta.env.VITE_DEFAULT_SHEET_NAME || '';
   });
   const [isSyncing, setIsSyncing] = useState(false);
   const [syncError, setSyncError] = useState<string | null>(null);
