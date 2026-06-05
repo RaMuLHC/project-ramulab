@@ -27,6 +27,8 @@ interface ArchiveHeaderProps {
   availableCategories: ProjectCategory[];
   isAdminMode: boolean;
   customPresets?: CustomPreset[];
+  onOpenAddCard?: () => void;
+  onOpenSyncDialog?: () => void;
 }
 
 export default function ArchiveHeader({
@@ -48,7 +50,9 @@ export default function ArchiveHeader({
   stats,
   availableCategories,
   isAdminMode,
-  customPresets = []
+  customPresets = [],
+  onOpenAddCard,
+  onOpenSyncDialog
 }: ArchiveHeaderProps) {
   const [showConfig, setShowConfig] = useState(true);
 
@@ -197,7 +201,7 @@ export default function ArchiveHeader({
               </p>
 
               <div className="grid grid-cols-1 md:grid-cols-12 gap-3 items-end">
-                <div className="md:col-span-7">
+                <div className="md:col-span-5">
                   <label className="block font-mono text-[9px] font-bold text-kraft-800 uppercase mb-1">
                     Google 試算表共享網址 (Spreadsheet Link)
                   </label>
@@ -206,7 +210,7 @@ export default function ArchiveHeader({
                     placeholder="https://docs.google.com/spreadsheets/d/.../edit"
                     value={sheetUrl}
                     onChange={(e) => setSheetUrl(e.target.value)}
-                    className="w-full px-2.5 py-1.5 bg-[#FAF2E5] border border-kraft-400 rounded-xs font-mono text-xs focus:outline-none focus:border-emerald-705"
+                    className="w-full px-2.5 py-1.5 bg-[#FAF2E5] border border-kraft-400 rounded-xs font-mono text-xs focus:outline-none focus:border-emerald-700"
                   />
                 </div>
 
@@ -219,7 +223,7 @@ export default function ArchiveHeader({
                     placeholder="預設：Sheet1"
                     value={sheetName}
                     onChange={(e) => setSheetName(e.target.value)}
-                    className="w-full px-2.5 py-1.5 bg-[#FAF2E5] border border-kraft-400 rounded-xs font-mono text-xs focus:outline-none focus:border-emerald-705"
+                    className="w-full px-2.5 py-1.5 bg-[#FAF2E5] border border-kraft-400 rounded-xs font-mono text-xs focus:outline-none focus:border-emerald-700"
                   />
                 </div>
 
@@ -232,6 +236,16 @@ export default function ArchiveHeader({
                   >
                     <RefreshCw className={`w-3.5 h-3.5 ${isSyncing ? 'animate-spin' : ''}`} />
                     <span>{isSyncing ? '同步中' : '同步載入'}</span>
+                  </button>
+                </div>
+
+                <div className="md:col-span-2">
+                  <button
+                    type="button"
+                    onClick={onOpenSyncDialog}
+                    className="w-full inline-flex items-center justify-center gap-1 px-3 py-2 bg-transparent hover:bg-emerald-50 border border-emerald-800 text-emerald-800 font-mono text-xs font-black rounded-xs transition-colors cursor-pointer"
+                  >
+                    <span>進階雙向同步</span>
                   </button>
                 </div>
               </div>

@@ -9,7 +9,9 @@ import { getStoredProjects, saveProjects, INITIAL_PROJECTS } from './data/projec
 import ProjectCard from './components/ProjectCard';
 import ProjectDetailDialog from './components/ProjectDetailDialog';
 import ArchiveHeader from './components/ArchiveHeader';
-import { Home, Mail, FileCheck, Layers, RotateCcw } from 'lucide-react';
+import AddProjectDialog from './components/AddProjectDialog';
+import GoogleSheetsSync from './components/GoogleSheetsSync';
+import { Home, Mail, RotateCcw } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 
 // Helper function to parse CSV robustly from published Google Sheets
@@ -108,6 +110,28 @@ export default function App() {
     }
     return false;
   });
+
+  const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
+  const [isSyncDialogOpen, setIsSyncDialogOpen] = useState(false);
+
+  // Save newly created project
+  const handleAddProjectSave = (newProject: ProjectEntry) => {
+    const updated = [newProject, ...projects];
+    setProjects(updated);
+    saveProjects(updated);
+  };
+
+  // Import projects from sheets
+  const handleImportProjects = (imported: ProjectEntry[]) => {
+    const merged = [...imported];
+    projects.forEach((p) => {
+      if (!merged.some((m) => m.id === p.id)) {
+        merged.push(p);
+      }
+    });
+    setProjects(merged);
+    saveProjects(merged);
+  };
 
   // 🔄 Active sync fetch from Google Sheet URL
   const handleSyncSheet = async (tgtUrl: string, tgtName: string) => {
@@ -454,6 +478,8 @@ ${description}`;
           availableCategories={availableCategories}
           isAdminMode={isAdminMode}
           customPresets={customPresets}
+          onOpenAddCard={() => setIsAddDialogOpen(true)}
+          onOpenSyncDialog={() => setIsSyncDialogOpen(true)}
         />
 
         {/* 📋 Visual Tiles Shelf */}
@@ -518,7 +544,7 @@ ${description}`;
             )}
 
             {/* Render matched list of active archives */}
-            <AnimatePresence mode="popLayout font-serif">
+            <AnimatePresence mode="popLayout">
               {filteredProjects.map((project, idx) => {
                 const adjustedIndex = selectedCategory === 'all' && selectedStatus === 'all' && searchQuery === '' ? idx + 1 : idx;
                 
@@ -598,6 +624,21 @@ ${description}`;
         onDelete={handleDeleteProject}
         onUpdateStatus={handleUpdateStatus}
         customPresets={customPresets}
+      />
+
+      {/* Add Project Dialog */}
+      <AddProjectDialog
+        isOpen={isAddDialogOpen}
+        onClose={() => setIsAddDialogOpen(false)}
+        onSave={handleAddProjectSave}
+      />
+
+      {/* Google Sheets advanced sync modal */}
+      <GoogleSheetsSync
+        isOpen={isSyncDialogOpen}
+        onClose={() => setIsSyncDialogOpen(false)}
+        projects={projects}
+        onImport={handleImportProjects}
       />
     </div>
   );

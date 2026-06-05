@@ -5,7 +5,7 @@
 
 import React, { useState } from 'react';
 import { ProjectEntry, ProjectCategory, ProjectStatus } from '../types';
-import { X, Save, Sparkles, FolderPlus, HelpCircle } from 'lucide-react';
+import { X, Save, FolderPlus } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 
 interface AddProjectDialogProps {
@@ -34,7 +34,7 @@ export default function AddProjectDialog({ isOpen, onClose, onSave }: AddProject
   const [title, setTitle] = useState('');
   const [subtitle, setSubtitle] = useState('');
   const [category, setCategory] = useState<ProjectCategory>('code');
-  const [status, setStatus] = useState<ProjectStatus>('in-development');
+  const [status, setStatus] = useState<ProjectStatus>('in-progress');
   const [date, setDate] = useState(getTodayFormatted());
   const [description, setDescription] = useState('');
   const [content, setContent] = useState('');
@@ -90,7 +90,7 @@ export default function AddProjectDialog({ isOpen, onClose, onSave }: AddProject
     setTitle('');
     setSubtitle('');
     setCategory('code');
-    setStatus('in-development');
+    setStatus('in-progress');
     setDate(getTodayFormatted());
     setDescription('');
     setContent('');
@@ -196,7 +196,7 @@ export default function AddProjectDialog({ isOpen, onClose, onSave }: AddProject
                   className="w-full px-3 py-1.5 bg-[#FAF2E5] border border-kraft-400/60 rounded-xs font-mono text-xs text-stone-800 focus:outline-none focus:border-kraft-600 cursor-pointer"
                 >
                   <option value="completed">已完成 (Completed)</option>
-                  <option value="in-development">開發中 (In-Development)</option>
+                  <option value="in-progress">開發中 (In-Progress)</option>
                   <option value="concept">構思中 (Concept)</option>
                   <option value="archived">已存檔 (Archived)</option>
                 </select>

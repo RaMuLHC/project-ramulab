@@ -13,8 +13,7 @@ import {
   CheckCircle2, 
   AlertCircle, 
   X, 
-  Clipboard, 
-  Sparkles 
+  Clipboard
 } from 'lucide-react';
 
 interface GoogleSheetsSyncProps {
@@ -405,7 +404,7 @@ export default function GoogleSheetsSync({
   };
 
   return (
-    <div className="fixed inset-0 bg-stone-900/50 backdrop-blur-xs z-50 flex items-center justify-center p-3 select-none">
+    <div className="fixed inset-0 bg-stone-900/50 backdrop-blur-xs z-50 flex items-center justify-center p-3">
       <div 
         className="bg-[#FAF2E5] paper-noise border-4 border-double border-kraft-900 w-full max-w-xl rounded-sm shadow-xl p-5 md:p-6 text-left relative max-h-[90vh] overflow-y-auto"
         onClick={(e) => e.stopPropagation()}

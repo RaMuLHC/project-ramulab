@@ -1,6 +1,1 @@
-{
-  "name": "Ramulab Project Archive",
-  "description": "A nostalgic typewriter and kraft paper style archive database displaying all completed and in-progress personal projects.",
-  "requestFramePermissions": [],
-  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
-}
+{"name":"Ramulab Project Archive","description":"A nostalgic typewriter and kraft paper style archive database displaying all completed and in-progress personal projects.","requestFramePermissions":[],"majorCapabilities":["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]}

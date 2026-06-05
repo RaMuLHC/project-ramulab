@@ -5,7 +5,7 @@
 
 import React, { useState } from 'react';
 import { ProjectEntry, CustomPreset } from '../types';
-import { X, ExternalLink, Calendar, FolderOpen, Tag, Paperclip, Clipboard, Check, RotateCcw } from 'lucide-react';
+import { X, ExternalLink, Calendar, FolderOpen, Tag, Paperclip, Clipboard, Check } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 
 interface ProjectDetailDialogProps {
