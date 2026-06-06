@@ -7,6 +7,7 @@ import React, { useState } from 'react';
 import { ProjectEntry, CustomPreset } from '../types';
 import { X, ExternalLink, Calendar, FolderOpen, Tag, Paperclip, Clipboard, Check } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
+import { useTranslation } from '../i18n';
 
 interface ProjectDetailDialogProps {
   project: ProjectEntry | null;
@@ -17,6 +18,7 @@ interface ProjectDetailDialogProps {
 }
 
 export default function ProjectDetailDialog({ project, onClose, onDelete, onUpdateStatus, customPresets = [] }: ProjectDetailDialogProps) {
+  const { t, localizeText } = useTranslation();
   const [copied, setCopied] = useState(false);
   const [stampActive, setStampActive] = useState(false);
 
@@ -46,13 +48,13 @@ export default function ProjectDetailDialog({ project, onClose, onDelete, onUpda
 
   const getCategoryLabel = (cat: string) => {
     const custom = customPresets.find(p => p.type === 'category' && p.key === cat);
-    if (custom) return custom.label;
+    if (custom) return localizeText(custom.label);
     switch (cat) {
-      case 'code': return '代碼碼塊 · CODE';
-      case 'design': return '設計美學 · DESIGN';
-      case 'research': return '學術研究 · RES';
-      case 'lab': return '物理工坊 · LAB';
-      case 'writing': return '文獻檔案 · DOC';
+      case 'code': return t('card.category_code_long');
+      case 'design': return t('card.category_design_long');
+      case 'research': return t('card.category_research_long');
+      case 'lab': return t('card.category_lab_long');
+      case 'writing': return t('card.category_writing_long');
       default: return cat.toUpperCase();
     }
   };
@@ -94,21 +96,21 @@ export default function ProjectDetailDialog({ project, onClose, onDelete, onUpda
                   BOX // {project.archiveNo}
                 </span>
                 <h2 className="font-serif text-2xl font-black text-kraft-900 tracking-tight leading-snug">
-                  {project.title}
+                  {localizeText(project.title)}
                 </h2>
                 <p className="font-typewriter text-xs text-kraft-700 italic mt-0.5 font-semibold">
-                  {project.subtitle}
+                  {localizeText(project.subtitle)}
                 </p>
               </div>
 
               <div className="mt-4 md:mt-0 text-left md:text-right font-mono text-[10px] text-kraft-700/80 space-y-1">
                 <div className="flex items-center gap-1 md:justify-end">
                   <Calendar className="w-3 h-3 text-kraft-500" />
-                  <span>DEPOSIT DATE: <strong className="font-semibold text-kraft-900">{project.date}</strong></span>
+                  <span>{t('detail.deposit_date')} <strong className="font-semibold text-kraft-900">{project.date}</strong></span>
                 </div>
                 <div className="flex items-center gap-1 md:justify-end">
                   <Tag className="w-3 h-3 text-kraft-500" />
-                  <span>GROUPING: <strong className="font-semibold uppercase text-kraft-900">{getCategoryLabel(project.category)}</strong></span>
+                  <span>{t('detail.grouping')} <strong className="font-semibold uppercase text-kraft-900">{localizeText(getCategoryLabel(project.category))}</strong></span>
                 </div>
               </div>
             </div>
@@ -116,12 +118,12 @@ export default function ProjectDetailDialog({ project, onClose, onDelete, onUpda
             {/* Scrollable Dossier Content written in Typewriter font */}
             <div className="max-h-[350px] overflow-y-auto pr-2 mb-6 font-typewriter text-xs leading-relaxed text-stone-800 border-b border-[#dfccb7] pb-5">
               <pre className="whitespace-pre-wrap font-sans leading-relaxed break-words bg-[#f6ebd9]/50 p-4 border border-kraft-200 rounded-sm">
-                {project.content}
+                {localizeText(project.content)}
               </pre>
 
               {/* Tags Index line */}
               <div className="mt-5 flex flex-wrap gap-1.5 items-center">
-                <span className="font-mono text-[9px] font-bold text-kraft-600 mr-1 uppercase">TAG CROSS-REFS:</span>
+                <span className="font-mono text-[9px] font-bold text-kraft-600 mr-1 uppercase">{t('detail.tag_cross_refs')}</span>
                 {project.tags.map((tag) => (
                   <span
                     key={tag}
@@ -138,7 +140,7 @@ export default function ProjectDetailDialog({ project, onClose, onDelete, onUpda
               <div className="mb-6 p-3 bg-kraft-100/50 border border-kraft-300/60 rounded-xs">
                 <h4 className="font-mono text-[10px] font-black text-kraft-800 flex items-center gap-1 uppercase mb-2">
                   <Paperclip className="w-3.5 h-3.5 text-kraft-600" />
-                  文件附件清單 (METADATA PINNED ATTACHMENTS)
+                  {t('detail.attachments_title')}
                 </h4>
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
                   {project.attachments.map((file) => (
@@ -165,7 +167,7 @@ export default function ProjectDetailDialog({ project, onClose, onDelete, onUpda
                     className="inline-flex items-center gap-1.5 px-4 py-1.5 bg-kraft-700 text-[#fbf8f3] hover:bg-kraft-800 font-mono text-xs font-semibold rounded-xs shadow-sm transition-colors cursor-pointer"
                   >
                     <ExternalLink className="w-3.5 h-3.5" />
-                    訪問專案網址 (DEMO LINK)
+                    {t('detail.demo_link')}
                   </a>
                 )}
                 
@@ -177,12 +179,12 @@ export default function ProjectDetailDialog({ project, onClose, onDelete, onUpda
                     {copied ? (
                       <>
                         <Check className="w-3.5 h-3.5 text-emerald-600" />
-                        <span>已複製</span>
+                        <span>{t('detail.copied')}</span>
                       </>
                     ) : (
                       <>
                         <Clipboard className="w-3.5 h-3.5" />
-                        <span>複製連結</span>
+                        <span>{t('detail.copy_link')}</span>
                       </>
                     )}
                   </button>
@@ -192,7 +194,7 @@ export default function ProjectDetailDialog({ project, onClose, onDelete, onUpda
               <div className="flex items-center gap-2">
                 {onUpdateStatus && (
                   <div className="flex items-center gap-1">
-                    <span className="font-mono text-[9px] text-kraft-600 font-bold uppercase mr-1">變更狀態:</span>
+                    <span className="font-mono text-[9px] text-kraft-600 font-bold uppercase mr-1">{t('detail.change_status')}</span>
                     <select
                       value={project.status}
                       onChange={(e) => onUpdateStatus(project.id, e.target.value as ProjectEntry['status'])}
@@ -200,14 +202,14 @@ export default function ProjectDetailDialog({ project, onClose, onDelete, onUpda
                     >
                       {customPresets.filter(p => p.type === 'status').length > 0 ? (
                         customPresets.filter(p => p.type === 'status').map(p => (
-                          <option key={p.key} value={p.key}>{p.label}</option>
+                          <option key={p.key} value={p.key}>{localizeText(p.label)}</option>
                         ))
                       ) : (
                         <>
-                          <option value="completed">已完成 / COMPLETED</option>
-                          <option value="in-progress">開發中 / IN PROGRESS</option>
-                          <option value="concept">構思中 / CONCEPT</option>
-                          <option value="archived">已存檔 / ARCHIVED</option>
+                          <option value="completed">{t('card.status_completed_stamp_long')}</option>
+                          <option value="in-progress">{t('card.status_inprogress_stamp_long')}</option>
+                          <option value="concept">{t('card.status_concept_stamp_long')}</option>
+                          <option value="archived">{t('card.status_archived_stamp_long')}</option>
                         </>
                       )}
                     </select>
@@ -217,14 +219,14 @@ export default function ProjectDetailDialog({ project, onClose, onDelete, onUpda
                 {onDelete && (
                   <button
                     onClick={() => {
-                      if (confirm('確定要永久銷毀此專案檔案卡？此動作無法撤銷。')) {
+                      if (confirm(t('detail.shred_confirm'))) {
                         onDelete(project.id);
                         onClose();
                       }
                     }}
                     className="px-2.5 py-1 text-rose-700 hover:bg-rose-50 border border-rose-300/40 rounded-sm font-mono text-[10px] transition-colors"
                   >
-                    銷毀此卡 (SHRED CARD)
+                    {t('detail.shred_card')}
                   </button>
                 )}
 
@@ -232,7 +234,7 @@ export default function ProjectDetailDialog({ project, onClose, onDelete, onUpda
                   onClick={onClose}
                   className="px-3 py-1.5 bg-stone-200 hover:bg-stone-300 border border-stone-400/40 rounded-xs font-mono text-xs text-stone-800 transition-colors"
                 >
-                  關閉卷宗
+                  {t('detail.close_folder')}
                 </button>
               </div>
             </div>

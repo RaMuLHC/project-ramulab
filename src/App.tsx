@@ -13,6 +13,7 @@ import AddProjectDialog from './components/AddProjectDialog';
 import GoogleSheetsSync from './components/GoogleSheetsSync';
 import { Home, Mail, RotateCcw } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
+import { useTranslation } from './i18n';
 
 // Helper function to parse CSV robustly from published Google Sheets
 function parseCSV(text: string): string[][] {
@@ -64,6 +65,7 @@ function parseCSV(text: string): string[][] {
 }
 
 export default function App() {
+  const { t, language, setLanguage, localizeText } = useTranslation();
   const [projects, setProjects] = useState<ProjectEntry[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<'all' | ProjectEntry['category']>('all');
@@ -136,7 +138,7 @@ export default function App() {
   // 🔄 Active sync fetch from Google Sheet URL
   const handleSyncSheet = async (tgtUrl: string, tgtName: string) => {
     if (!tgtUrl.trim()) {
-      setSyncError('請輸入有效的 Google 試算表共享網址');
+      setSyncError(t('sync.url_error_empty'));
       return;
     }
     
@@ -194,7 +196,7 @@ export default function App() {
 
       const response = await fetch(fetchUrl);
       if (!response.ok) {
-        throw new Error(`試算表連線因 HTTP 狀態代碼 ${response.status} 失敗。請檢查網址並確認您的試算表已共享為「知道連結的任何人均可檢視」！`);
+        throw new Error(t('sync.sync_error_fetch_fail', { status: response.status }));
       }
 
       const csvText = await response.text();
@@ -202,14 +204,14 @@ export default function App() {
       // Check if Google returned an API query error instead of CSV data
       if (csvText.includes('google.visualization.Query.setResponse')) {
         const errorMatch = csvText.match(/"message":"([^"]+)"/);
-        const serverError = errorMatch ? errorMatch[1] : 'Google 試算表拒絕讀取或頁籤名稱不存在！';
-        throw new Error(`Google 試算表錯誤：${serverError} (請確認您的頁籤名稱「${tgtName || '預設第一張工作表'}」是否與試算表匹配且已開放共享)`);
+        const serverError = errorMatch ? errorMatch[1] : t('sync.api_error_empty_sheet');
+        throw new Error(t('sync.sync_error_google_api', { serverError, tgtName: tgtName || t('sync.sheet_name_placeholder') }));
       }
 
       const rows = parseCSV(csvText);
 
       if (rows.length === 0) {
-        throw new Error('共享工作表成功連通，但沒有回載任何有效卡片行目。請檢查頁籤名稱！');
+        throw new Error(t('sync.sync_error_empty_rows'));
       }
 
       // Detect if there is a header row (we skip if first cell contains Title/專題/名稱 keywords)
@@ -311,7 +313,7 @@ ${description}`;
       }
 
       if (parsedProjects.length === 0) {
-        throw new Error('未能在試算表內查出任何符合格式的專案列！');
+        throw new Error(t('sync.sync_error_no_formatted_row'));
       }
 
       setProjects(parsedProjects);
@@ -332,7 +334,7 @@ ${description}`;
 
     } catch (err: any) {
       console.error(err);
-      setSyncError(err.message || '無法自 Google Sheet 分析載入資料，請重新點選設定！');
+      setSyncError(err.message || t('sync.api_fail'));
       // On error, fallback to legacy cached files
       const backup = getStoredProjects();
       setProjects(backup);
@@ -352,9 +354,14 @@ ${description}`;
 
   // Filter projects based on Search and Selected filters
   const filteredProjects = projects.filter((project) => {
+    const titleLocalized = localizeText(project.title);
+    const subtitleLocalized = localizeText(project.subtitle);
+    const descriptionLocalized = localizeText(project.description);
+
     const matchesSearch =
-      project.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      project.subtitle.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      titleLocalized.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      subtitleLocalized.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      descriptionLocalized.toLowerCase().includes(searchQuery.toLowerCase()) ||
       project.archiveNo.toLowerCase().includes(searchQuery.toLowerCase()) ||
       project.tags.some((t) => t.toLowerCase().includes(searchQuery.toLowerCase()));
 
@@ -420,7 +427,7 @@ ${description}`;
 
   // Reset to static defaults (safety backup)
   const handleResetDefaults = () => {
-    if (confirm('確定要清除自訂設定，並重置回您的預設 Google 試算表嗎？')) {
+    if (confirm(t('sync.reset_confirm'))) {
       localStorage.removeItem('ramulab_sheet_url');
       localStorage.removeItem('ramulab_sheet_name');
       localStorage.removeItem('ramulab_custom_presets');
@@ -447,15 +454,41 @@ ${description}`;
       {/* Main Layout Centered wrapper */}
       <div className="max-w-4xl mx-auto bg-[#faf4ea]/45 border border-[#dfccb7]/40 p-5 md:p-8 rounded-sm backdrop-blur-3xs mt-6">
         
-        {/* Left top Home button tab inside the cabinet container */}
-        <div className="flex justify-start mb-2 select-none">
+        {/* Top button row: Left Home button, Right Language Selector */}
+        <div className="flex justify-between items-center mb-4 select-none">
           <button
             onClick={handleHomeBtnClick}
             className="px-2.5 py-1 cursor-pointer bg-amber-50/70 hover:bg-amber-100/90 border border-kraft-300 text-kraft-800 font-mono text-[10px] tracking-wider uppercase flex items-center gap-1 shadow-xs transition-colors rounded-sm"
           >
             <Home className="w-3.5 h-3.5 text-amber-700" />
-            <span>首頁目錄 · ARCHIVE HOME</span>
+            <span>首頁目錄 · Home Directory</span>
           </button>
+
+          {/* Style/Language selector in top-right */}
+          <div className="border border-kraft-400/80 bg-[#FAF2E5]/90 p-0.5 rounded-sm flex items-center font-mono text-[9px] tracking-wider relative shadow-xs">
+            <button 
+              onClick={() => setLanguage('zh')}
+              className={`px-2.5 py-0.5 cursor-pointer rounded-xs transition-all relative z-10 ${
+                language === 'zh' ? 'text-[#FAF2E5] font-black' : 'text-kraft-700 hover:text-kraft-900 font-medium'
+              }`}
+            >
+              {language === 'zh' && (
+                <motion.div layoutId="activeLang" className="absolute inset-0 bg-kraft-800 rounded-xs -z-10 shadow-xs" />
+              )}
+              中 · ZH
+            </button>
+            <button 
+              onClick={() => setLanguage('en')}
+              className={`px-2.5 py-0.5 cursor-pointer rounded-xs transition-all relative z-10 ${
+                language === 'en' ? 'text-[#FAF2E5] font-black' : 'text-kraft-700 hover:text-kraft-900 font-medium'
+              }`}
+            >
+              {language === 'en' && (
+                <motion.div layoutId="activeLang" className="absolute inset-0 bg-kraft-800 rounded-xs -z-10 shadow-xs" />
+              )}
+              EN
+            </button>
+          </div>
         </div>
 
         {/* Render interactive search and ledger info metrics */}
@@ -510,12 +543,12 @@ ${description}`;
                 {/* Businesscard identity block */}
                 <div className="py-5 text-left flex-grow flex flex-col justify-center">
                   <h2 className="font-serif text-2xl font-black text-kraft-900 tracking-tight flex items-center gap-1.5 leading-none">
-                    幸會！我是RaMu
+                    {t('card.greeting')}
                   </h2>
                   <div className="w-16 h-[2px] bg-red-700/60 my-3 rotate-[-1deg]"></div>
                   
                   <p className="font-serif text-xs leading-relaxed text-stone-800 font-medium pl-2 border-l border-kraft-400">
-                    ——歡迎蒞臨此處，探索我的數位檔案與構思。
+                    {t('card.welcome_msg')}
                   </p>
                 </div>
 
@@ -533,13 +566,13 @@ ${description}`;
                     className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-kraft-100 hover:bg-kraft-200 text-kraft-800 border border-kraft-300 font-mono text-[10px] font-bold rounded-sm transition-all cursor-pointer"
                   >
                     <Mail className="w-3 h-3 text-red-700" />
-                    <span>聯絡：info@ramulab.com</span>
+                    <span>{t('card.contact')}</span>
                   </button>
                 </div>
 
                 {/* Red ink corner mark representing fine art stamp seal */}
                 <div className="absolute top-2 right-4 w-4 h-4 rounded-full bg-red-800/10 border border-red-800/30 flex items-center justify-center font-stamp text-[8px] text-red-800 select-none">
-                  印
+                  {t('card.seal_yin')}
                 </div>
               </motion.div>
             )}
@@ -570,17 +603,17 @@ ${description}`;
               className="mt-8 p-12 text-center bg-[#FAF2E5]/50 border border-dashed border-kraft-400 rounded-sm select-none"
             >
               <div className="font-typewriter text-xs text-kraft-700 mb-2">
-                {projects.length === 0 ? '⚠️ 尚未讀取到任何專案卡片' : '查無匹配字軌之歸檔文件卡。'}
+                {projects.length === 0 ? t('empty.no_card_read') : t('empty.no_match')}
               </div>
               <p className="text-stone-600 text-xs font-mono max-w-md mx-auto leading-relaxed">
                 {projects.length === 0 
-                  ? '目前網頁沒有載入任何專案。請點擊上方或頁面底部的「開啟設定面板」，貼上您的 Google 試算表共享網址並點擊同步！'
-                  : `未能在存檔室中尋得符合「${searchQuery}」字軌的檔案名錄。請重新調整篩選條件或重新檢查 Google 試算表連結。`
+                  ? t('empty.no_projects_loaded_instruction')
+                  : t('empty.no_match_instruction', { query: searchQuery })
                 }
               </p>
               {syncError && (
                 <div className="mt-3 p-2 bg-red-50 border border-red-200 text-red-950 font-serif text-[11px] max-w-md mx-auto rounded-xs text-left">
-                  <strong>連線錯誤：</strong>{syncError}
+                  <strong>{t('empty.connection_error')}</strong>{syncError}
                 </div>
               )}
               <div className="mt-4 flex gap-2 justify-center">
@@ -589,7 +622,7 @@ ${description}`;
                     onClick={handleClearFilters}
                     className="font-mono text-xs px-3 py-1 bg-[#FAF2E5] hover:bg-stone-50 border border-kraft-400 text-stone-700 rounded-sm cursor-pointer"
                   >
-                    清除所有過濾 (RESET)
+                    {t('empty.reset_filters')}
                   </button>
                 )}
               </div>
@@ -611,7 +644,7 @@ ${description}`;
                 title="Reset configuration to fallback"
               >
                 <RotateCcw className="w-3 h-3 text-kraft-400 font-bold" />
-                <span>[重置系統預設名錄]</span>
+                <span>{t('footer.reset_system_default')}</span>
               </button>
             )}
           </div>

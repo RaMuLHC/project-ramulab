@@ -7,6 +7,7 @@ import React from 'react';
 import { ProjectEntry, CustomPreset } from '../types';
 import { Calendar, FileText, ExternalLink, Paperclip } from 'lucide-react';
 import { motion } from 'motion/react';
+import { useTranslation } from '../i18n';
 
 interface ProjectCardProps {
   key?: React.Key;
@@ -17,6 +18,7 @@ interface ProjectCardProps {
 }
 
 export default function ProjectCard({ project, index, onSelect, customPresets = [] }: ProjectCardProps) {
+  const { t, localizeText } = useTranslation();
   const [isHovered, setIsHovered] = React.useState(false);
 
   // Deterministic organic stack offsets to create an aesthetic "overlapping" look
@@ -54,7 +56,7 @@ export default function ProjectCard({ project, index, onSelect, customPresets = 
         }
       }
       return {
-        text: custom.label,
+        text: localizeText(custom.label),
         color: colorClass
       };
     }
@@ -62,27 +64,27 @@ export default function ProjectCard({ project, index, onSelect, customPresets = 
     switch (status) {
       case 'completed':
         return {
-          text: '已完成 · COMPLETED',
+          text: t('card.status_completed_stamp_long'),
           color: 'text-emerald-700/80 border-emerald-600/40 bg-emerald-50/10'
         };
       case 'in-progress':
       case 'in-development':
         return {
-          text: '開發中 · IN PROGRESS',
+          text: t('card.status_inprogress_stamp_long'),
           color: 'text-amber-700/80 border-amber-600/40 bg-[#FAF2E5]/50'
         };
       case 'concept':
         return {
-          text: '構思中 · CONCEPT',
+          text: t('card.status_concept_stamp_long'),
           color: 'text-purple-700/80 border-purple-600/40 bg-purple-50/10'
         };
       case 'archived':
         return {
-          text: '已存檔 · ARCHIVED',
+          text: t('card.status_archived_stamp_long'),
           color: 'text-rose-700/80 border-rose-600/40 bg-rose-50/10'
         };
       default:
-        return { text: status.toUpperCase(), color: 'text-stone-500 border-stone-400 bg-stone-50/10' };
+        return { text: localizeText(status).toUpperCase(), color: 'text-stone-500 border-stone-400 bg-stone-50/10' };
     }
   };
 
@@ -93,11 +95,11 @@ export default function ProjectCard({ project, index, onSelect, customPresets = 
     if (custom) return custom.label;
 
     switch (cat) {
-      case 'code': return '代碼碼塊 · CODE';
-      case 'design': return '設計美學 · DESIGN';
-      case 'research': return '學術研究 · RES';
-      case 'lab': return '物理工坊 · LAB';
-      case 'writing': return '文獻檔案 · DOC';
+      case 'code': return t('card.category_code_long');
+      case 'design': return t('card.category_design_long');
+      case 'research': return t('card.category_research_long');
+      case 'lab': return t('card.category_lab_long');
+      case 'writing': return t('card.category_writing_long');
       default: return cat.toUpperCase();
     }
   };
@@ -133,7 +135,7 @@ export default function ProjectCard({ project, index, onSelect, customPresets = 
         } shadow-[0_-2px_4px_rgba(0,0,0,0.03)]`}
       >
         <span className="font-mono text-[9px] font-bold text-[#6a543b] uppercase tracking-widest">
-          {project.category}
+          {localizeText(getCategoryLabel(project.category)).split('·')[0].trim()}
         </span>
       </div>
 
@@ -198,15 +200,15 @@ export default function ProjectCard({ project, index, onSelect, customPresets = 
             <div className="flex justify-between items-end">
               <div className="w-[68%]">
                 <span className="font-mono text-[8px] font-black text-stone-600/70 block leading-none uppercase tracking-wider">
-                  SUBJECT / 計畫主題
+                  {t('card.subject')}
                 </span>
                 <h3 className="font-serif text-[17px] font-bold text-stone-900 tracking-tight leading-tight mt-1 truncate">
-                  {project.title}
+                  {localizeText(project.title)}
                 </h3>
               </div>
               <div className="w-[28%] text-right">
                 <span className="font-mono text-[8px] font-black text-stone-600/70 block leading-none uppercase tracking-wider">
-                  DATE / 封存
+                  {t('card.date')}
                 </span>
                 <span className="font-mono text-[9.5px] font-black text-stone-800 tracking-tight mt-1 inline-block bg-[#e5d2b7]/40 px-1 py-0.5 rounded-xs">
                   {project.date}
@@ -217,15 +219,15 @@ export default function ProjectCard({ project, index, onSelect, customPresets = 
 
           {/* Subtitle designations */}
           <div className="font-typewriter text-[11px] text-stone-700 italic font-medium leading-normal mb-3 border-b border-dashed border-[#c8b7a0]/60 pb-1.5 flex justify-between items-center">
-            <span>{project.subtitle}</span>
+            <span>{localizeText(project.subtitle)}</span>
           </div>
 
           {/* Elegant ruled description lines matching vintage paper guides */}
           <div className="relative mt-2 min-h-[90px] flex flex-col">
-            {/* 20px lined rulings printed on the cardboard */}
+            {/* 20px Lined rulings printed on the cardboard */}
             <div className="absolute inset-0 bg-[linear-gradient(rgba(130,100,70,0.075)_1px,transparent_1px)] bg-[size:100%_20px] pointer-events-none" />
-            <p className="text-stone-800/90 text-xs font-mono leading-[20px] line-clamp-4 pl-1 pt-0.5 z-10">
-              {project.description}
+            <p className="text-stone-800/90 text-xs font-mono leading-[20px] line-clamp-4 pl-1 pt-0.5 z-10 whitespace-pre-line">
+              {localizeText(project.description)}
             </p>
           </div>
         </div>

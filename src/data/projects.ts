@@ -9,8 +9,8 @@ export const INITIAL_PROJECTS: ProjectEntry[] = [
   {
     id: 'proj-1',
     title: 'Anemometer Core Matrix',
-    subtitle: '輕量化風速遙測矩陣傳輸協定',
-    description: '基於低能耗封包鏈結的風速與氣溫測候終端傳播架構，實現微瓦級自主通訊氣象島網絡。',
+    subtitle: '輕量化風速遙測矩陣傳輸協定 /// Lightweight Anemometer Telemetry Matrix Protocol',
+    description: '基於低能耗封包鏈結的風速與氣溫測候終端傳播架構，實現微瓦級自主通訊氣象島網絡。 /// Low-energy packet-linked wind speed and temperature telemetry terminal transmission architecture, enabling microwatt autonomous communication weather island networks.',
     content: `DEPT. OF TELEMETRY // REPORT NO. WIND-802-A
 =============================================
 [STATUS: OPERATIONAL] [LEDGER RECORDED: YES]
@@ -25,6 +25,22 @@ export const INITIAL_PROJECTS: ProjectEntry[] = [
 
 成果檔案：
 - /dev/anemo_matrix.c (已部署於東沙島礁觀測站)
+- /doc/calibration_standards_v3.pdf
+///
+DEPT. OF TELEMETRY // REPORT NO. WIND-802-A
+=============================================
+[STATUS: OPERATIONAL] [LEDGER RECORDED: YES]
+
+This project explores how to establish autonomous meteorological observation nodes using weak atmospheric physical energy or Low-Power Wide-Area Networks (LPWAN) under polarized environments.
+It primarily addresses signal drift and high-frequency noise filtering under high salinity, low temperature, and low voltage conditions.
+
+R&D Details:
+1. The transmission layer uses a self-developed "signal compression coding," with a single uplink packet of only 12 Bytes.
+2. Node standby consumption is less than 4.2 microamps, allowing a single coin cell battery to operate for 72 months.
+3. Employs NTRU asymmetric encryption to prevent physical tampering of nodes in cold wilderness areas.
+
+Deliverables:
+- /dev/anemo_matrix.c (Deployed at the Pratas Island Observation Station)
 - /doc/calibration_standards_v3.pdf`,
     status: 'completed',
     category: 'code',
@@ -37,8 +53,8 @@ export const INITIAL_PROJECTS: ProjectEntry[] = [
   {
     id: 'proj-2',
     title: 'Parchment Adaptive Font Engine',
-    subtitle: '古典紙質自適應墨潰渲染字型排版引擎',
-    description: '模擬手工羊皮紙與老式鑄模鉛字在吸墨、浸透、與壓力不均狀態下的即時物理渲染演算法。',
+    subtitle: '古典紙質自適應墨潰渲染字型排版引擎 /// Classical Parchment Adaptive Ink-Dispersion Rendering Font Engine',
+    description: '模擬手工羊皮紙與老式鑄模鉛字在吸墨、浸透、與壓力不均狀態下的即時物理渲染演算法。 /// Real-time physical rendering algorithm simulating ink absorption, penetration, and uneven pressure of handmade parchment and vintage molded lead type.',
     content: `CLASSICAL TYPOGRAPHY DEPT // LAB-114
 =============================================
 [STATUS: IN PROGRESS] [DRAFT REVISION: V2]
@@ -54,7 +70,24 @@ export const INITIAL_PROJECTS: ProjectEntry[] = [
 開發進度：
 - 已完成 SVG Path 向量變形擾動器
 - WebGL 2D 擴散著色器（已達 60 FPS 實時渲染）
-- 待集成：中文活字排版「康熙字典體」支持`,
+- 待集成：中文活字排版「康熙字典體」支持
+///
+CLASSICAL TYPOGRAPHY DEPT // LAB-114
+=============================================
+[STATUS: IN PROGRESS] [DRAFT REVISION: V2]
+
+This project aims to rescue the lost "aesthetic of physical print imperfections" in digital typography.
+It utilizes WebGL shaders to compute real-time micro-fibrous capillary action at the font edges, recreating the ink penetration and indentation texture of 15th-century Gutenberg printing.
+
+Core Logic:
+1. Pressure Simulation: Disturbs the typing hammer force based on character frequency in a word, making the "impression depth and ink bleed" of each letter unique.
+2. Paper Fiber Noise: Generates real-time micro-scale random 2D noise, convolving font outline paths with the noise via the Diffusion Equation.
+3. Ink Dynamic Oxidation: As page reading time increases, the font ink exhibits subtle saturation and gloss decay, recreating atmospheric chemical reactions.
+
+Development Status:
+- Completed SVG Path vector distortion disturber
+- WebGL 2D diffusion shader (achieved 60 FPS real-time rendering)
+- Pending Integration: Support for Chinese movable type "Kangxi Dictionary Font"`,
     status: 'in-progress',
     category: 'design',
     date: '2026.02.10',
@@ -66,8 +99,8 @@ export const INITIAL_PROJECTS: ProjectEntry[] = [
   {
     id: 'proj-3',
     title: 'Noosphere Mindmap Indexer',
-    subtitle: '心智空間網底語意偏角重組檢索儀',
-    description: '探索將高維、零散的日常觀察碎紙片，利用流形降維與語境拓撲，拼接成連續脈絡的自動排架系統。',
+    subtitle: '心智空間網底語意偏角重組檢索儀 /// Noosphere Mental Semantic Angular Shift Reindexing Device',
+    description: '探索將高維、零散的日常觀察碎紙片，利用流形降維與語境拓撲，拼接成連續脈絡的自動排架系統。 /// Exploring the automatic sorting of high-dimensional, fragmented daily observation scraps into a continuous context using manifold learning and semantic topology.',
     content: `MEMEX ARCHIVE EXPERIMENT // NOO-330
 =============================================
 [STATUS: CONCEPT ONLY] [DECLASSIFICATION: LEVEL-1]
@@ -81,7 +114,22 @@ export const INITIAL_PROJECTS: ProjectEntry[] = [
 
 未來方向：
 - 構建三維檔案室（3D Card Catalog Shelf）
-- 融合本地 LLM 進行全自動牛皮紙卡片建檔。`,
+- 融合本地 LLM 進行全自動牛皮紙卡片建檔。
+///
+MEMEX ARCHIVE EXPERIMENT // NOO-330
+=============================================
+[STATUS: CONCEPT ONLY] [DECLASSIFICATION: LEVEL-1]
+
+Traditional hierarchical or tag structures in databases often sever intuitive association chains. This experiment explores the seamless topology of a non-linear knowledge scroll.
+
+Conceptual Hypotheses:
+1. "Micro-notes" act as gravity wells in a high-dimensional semantic space.
+2. Introduces an adaptive force-directed mapping algorithm, allowing notes to drift and cluster dynamically based on the reader's eye dwell time or mouse drag paths.
+3. Index Card Storage: Each note behaves like a traditional library index card, which can be physically stacked. The stacking order and overlap areas represent transient logical paragraphs.
+
+Future Directions:
+- Construct a 3D Card Catalog Shelf
+- Integrate local LLM for fully automated kraft card cataloging.`,
     status: 'concept',
     category: 'research',
     date: '2026.05.01',
@@ -92,8 +140,8 @@ export const INITIAL_PROJECTS: ProjectEntry[] = [
   {
     id: 'proj-4',
     title: 'Typewriter CSS Haptic Engine',
-    subtitle: '機械鍵軸壓痕網頁物理反饋模擬軌跡',
-    description: '解構古典機械打字機的連桿阻力與字鎚敲擊軌跡，將此物理特徵完全抽象化為網頁 DOM 的微動態排版回饋。',
+    subtitle: '機械鍵軸壓痕網頁物理反饋模擬軌跡 /// Mechanical Key-Switch Indentation Web Physical Feedback Simulation',
+    description: '解構古典機械打字機的連桿阻力與字鎚敲擊軌跡，將此物理特徵完全抽象化為網頁 DOM 的微動態排版回饋。 /// Deconstructing linkage resistance and hammer trajectory of vintage mechanical typewriters, abstracting physical traits into micro-dynamic DOM layout feedback.',
     content: `PNEUMATIC HARDWARE RECREATION // L-712-Y
 =============================================
 [STATUS: COMPLETED] [PERFORMANCE TESTING: PASS]
@@ -106,7 +154,21 @@ export const INITIAL_PROJECTS: ProjectEntry[] = [
 3. 機械摩擦係數：按鍵行程會受到字元複雜度的微秒級阻尼回饋（支援網頁觸覺感應 API）。
 
 當前應用：
-- 本專案平台之「字級標籤」以及「卡片邊緣捲曲」皆已調校此物理模擬庫。`,
+- 本專案平台之「字級標籤」以及「卡片邊緣捲曲」皆已調校此物理模擬庫。
+///
+PNEUMATIC HARDWARE RECREATION // L-712-Y
+=============================================
+[STATUS: COMPLETED] [PERFORMANCE TESTING: PASS]
+
+This is a front-end physical effects library. It converts user typing behavior on virtual or physical keyboards into "typewriter hammer trajectory linkages" with physical mass.
+
+Functional Modules:
+1. Hammer Kinetic Energy: When characters appear on screen, they are not rendered instantly but undergo a 0.05-second "strike and bounce back" vibration, simulating metal-ribbon typewriters.
+2. Ribbon Wear: Frequently activated event cards display lower text edge contrast, simulating the fading effect of an old ink ribbon drying out.
+3. Mechanical Friction Coefficient: Key travel receives microsecond-level damping feedback based on character complexity (supports Web Haptics API).
+
+Current Applications:
+- The "category labels" and "curled card edges" of this archive platform have been calibrated using this physical simulation library.`,
     status: 'completed',
     category: 'lab',
     date: '2024.11.03',
@@ -118,8 +180,8 @@ export const INITIAL_PROJECTS: ProjectEntry[] = [
   {
     id: 'proj-5',
     title: 'Chronos Celestial Ephemeris Clock',
-    subtitle: '高精度黃赤經緯時角編碼計時裝置',
-    description: '結合實時儒略日天文星曆，運算觀測地當前大氣折射率、地軸章動、極移後之「真太陽時」時序計量器。',
+    subtitle: '高精度黃赤經緯時角編碼計時裝置 /// High-Precision Celestial Ephemeris Hour-Angle Encoder Timekeeper',
+    description: '結合實時儒略日天文星曆，運算觀測地當前大氣折射率、地軸章動、極移後之「真太陽時」時序計量器。 /// Calculates "True Solar Time" at the observer\'s location, incorporating real-time Julian Day astronomical ephemerides, atmospheric refraction, nutation, and polar motion.',
     content: `CELESTIAL CHRONOLOGY BRANCH // CHR-404-E
 =============================================
 [STATUS: IN PROGRESS] [CALIBRATION DATE: 1999-TODAY]
@@ -134,6 +196,22 @@ export const INITIAL_PROJECTS: ProjectEntry[] = [
 
 主要收錄：
 - /src/astro_time.ts
+- /3d_printing/enclosure_cad.step
+///
+CELESTIAL CHRONOLOGY BRANCH // CHR-404-E
+=============================================
+[STATUS: IN PROGRESS] [CALIBRATION DATE: 1999-TODAY]
+
+Standard time is a physical abstraction of uniform seconds. However, human intuition and biological cycles are governed by the actual angle of sunlight.
+This hardware and firmware development project investigates how to reconstruct the "original time" on the soil beneath the user's feet from Greenwich Mean Time.
+
+Architectural Characteristics:
+1. Local Ephemeris Integration: Embedded with simplified daily apparent motion coordinates for 1900-2100.
+2. Non-uniform Ticking: During summer months when the true solar day expands, the duration of a clock second is micro-adjusted to stay fully synchronized with nature.
+3. Interface Design: A digital twin of a classical astrolabe dial, with brass, parchment, and leather textures, fine graduation lines, and interlocking gear shadows.
+
+Key Inclusions:
+- /src/astro_time.ts
 - /3d_printing/enclosure_cad.step`,
     status: 'in-progress',
     category: 'lab',
@@ -145,8 +223,8 @@ export const INITIAL_PROJECTS: ProjectEntry[] = [
   {
     id: 'proj-6',
     title: 'Archive Paper Grain Synthesizer',
-    subtitle: '動態抗鋸齒數位紙質底噪合成器',
-    description: '利用 Web Audio 空間化音頻底噪與 SVG 動態流體噪點，即時合成老舊文件翻頁之觸覺、聽覺與視覺綜合質感。',
+    subtitle: '動態抗鋸齒數位紙質底噪合成器 /// Dynamic Anti-Aliased Digital Paper Grain Noise Synthesizer',
+    description: '利用 Web Audio 空間化音頻底噪與 SVG 動態流體噪點，即時合成老舊文件翻頁之觸覺、聽覺與視覺綜合質感。 /// Uses Web Audio spatialized noise and dynamic fluid SVG noise to synthesize multi-sensory page-flipping textures of vintage documents.',
     content: `ACOUSTIC & SURFACE INTERFACE // APS-909
 =============================================
 [STATUS: COMPLETED] [PLATFORM INTEGRATION: HIGH]
@@ -160,7 +238,22 @@ export const INITIAL_PROJECTS: ProjectEntry[] = [
 
 成果：
 - 已封裝為輕量 Web Audio API 模組
-- 本專案平台之「背景微噪與卡片音效」的核心基礎技術。`,
+- 本專案平台之「背景微噪與卡片音效」的核心基礎技術。
+///
+ACOUSTIC & SURFACE INTERFACE // APS-909
+=============================================
+[STATUS: COMPLETED] [PLATFORM INTEGRATION: HIGH]
+
+Utilizes digital filtering and time-varying frequency fields to recreate the unique ambient noise of a 19th-century library archive.
+
+Acoustic Characteristics:
+1. Crackles: Random low-frequency pops, simulating static electricity, micro-fissures in paper, and thermal motion of the surrounding environment.
+2. Room Resonance: A 45dB subtle background air draft (pink noise passed through an extremely narrow bandpass filter).
+3. Page Flip Physics: Synthesizes a unique "paper rubbing/friction" sound in real time based on the user's card swiping speed and drag velocity.
+
+Deliverables:
+- Packaged as a lightweight Web Audio API module.
+- Core underlying technology for this archive platform's "ambient noise and card sound effects."`,
     status: 'completed',
     category: 'lab',
     date: '2025.10.12',

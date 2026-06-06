@@ -15,6 +15,7 @@ import {
   X, 
   Clipboard
 } from 'lucide-react';
+import { useTranslation } from '../i18n';
 
 interface GoogleSheetsSyncProps {
   isOpen: boolean;
@@ -29,6 +30,7 @@ export default function GoogleSheetsSync({
   projects,
   onImport
 }: GoogleSheetsSyncProps) {
+  const { t } = useTranslation();
   const [spreadsheetUrl, setSpreadsheetUrl] = useState('');
   const [sheetsApiKey, setSheetsApiKey] = useState('');
   const [oauthAccessToken, setOauthAccessToken] = useState('');
@@ -90,16 +92,16 @@ export default function GoogleSheetsSync({
       link.click();
       document.body.removeChild(link);
 
-      setStatusMsg({ type: 'success', text: '試算表 CSV 檔案已成功導出並下載！您可以直接用 Google Sheets 開啟它。' });
+      setStatusMsg({ type: 'success', text: t('sync.csv_export_success') });
     } catch (err: any) {
-      setStatusMsg({ type: 'error', text: `導出 CSV 失敗: ${err.message}` });
+      setStatusMsg({ type: 'error', text: `${t('sync.csv_export_fail')}${err.message}` });
     }
   };
 
   // 2. Parse tab-separated or comma-separated pasted data (Ctrl+C from Google Sheets)
   const handleImportPastedData = () => {
     if (!pasteData.trim()) {
-      setStatusMsg({ type: 'error', text: '請在下方文字方塊中貼上來自 Google Sheets 的儲存格內容！' });
+      setStatusMsg({ type: 'error', text: t('sync.paste_error_empty') });
       return;
     }
 
@@ -107,7 +109,7 @@ export default function GoogleSheetsSync({
       // Split by lines
       const lines = pasteData.trim().split(/\r?\n/);
       if (lines.length < 2) {
-        throw new Error('資料行數不足，至少需要標頭行與一行資料！');
+        throw new Error(t('sync.paste_error_header'));
       }
 
       // Check delimiters (typically tab '\t' when copy-pasted directly from Google Sheets cells)
@@ -194,18 +196,18 @@ export default function GoogleSheetsSync({
       }
 
       if (importedList.length === 0) {
-        throw new Error('未能在貼入的文字中找到任何有效的專案行 (請確認是否包含「Title / 標題」欄位)');
+        throw new Error(t('sync.paste_no_valid_row'));
       }
 
       // Add to local project collection
       onImport(importedList);
       setStatusMsg({
         type: 'success',
-        text: `完美完成！成功從試算表貼文中解析並寫入 ${importedList.length} 份全新的文件歸檔卡！`
+        text: t('sync.paste_success', { count: importedList.length })
       });
       setPasteData('');
     } catch (err: any) {
-      setStatusMsg({ type: 'error', text: `解析貼入資料失敗: ${err.message || err}` });
+      setStatusMsg({ type: 'error', text: `${t('sync.paste_fail')}${err.message || err}` });
     }
   };
 
@@ -213,7 +215,7 @@ export default function GoogleSheetsSync({
   const handleFetchFromGoogleSheetsOnline = async () => {
     const spreadsheetId = parseSpreadsheetId(spreadsheetUrl);
     if (!spreadsheetId) {
-      setStatusMsg({ type: 'error', text: '請提供有效的 Google 試算表連結或 ID！' });
+      setStatusMsg({ type: 'error', text: t('sync.url_error_empty') });
       return;
     }
 
@@ -255,7 +257,7 @@ export default function GoogleSheetsSync({
         
         // If it was a permission error and no credentials were supplied, let's explain how to share the sheet publicly.
         if (response.status === 403 || response.status === 401) {
-          throw new Error(`存取遭拒。原因可能是未提供 API 密鑰/OAuth 憑證，或者該試算表未設置為「知道連結的任何人均可檢視」。詳情: ${errMsg}`);
+          throw new Error(`${t('sync.api_error_permission')}${errMsg}`);
         }
         throw new Error(errMsg);
       }
@@ -264,7 +266,7 @@ export default function GoogleSheetsSync({
       sheetData = data.values;
 
       if (!sheetData || sheetData.length < 2) {
-        throw new Error('取得成功，但該工作表中沒有發現足夠的儲存格內容或缺少標頭行。');
+        throw new Error(t('sync.api_error_empty_sheet'));
       }
 
       // Format headers
@@ -322,16 +324,16 @@ export default function GoogleSheetsSync({
       }
 
       if (parsedProjects.length === 0) {
-        throw new Error('未能在工作表中找到任何有效的專案行。');
+        throw new Error(t('sync.api_error_no_row'));
       }
 
       onImport(parsedProjects);
       setStatusMsg({
         type: 'success',
-        text: `雲端同步成功！成功從 Google Sheets 載入並整合了 ${parsedProjects.length} 筆專案，並已錄入您當前的本機櫃！`
+        text: t('sync.api_success', { count: parsedProjects.length })
       });
     } catch (err: any) {
-      setStatusMsg({ type: 'error', text: `雲端同步失敗: ${err.message}` });
+      setStatusMsg({ type: 'error', text: `${t('sync.api_fail')}${err.message}` });
     } finally {
       setLoading(false);
     }
@@ -341,11 +343,11 @@ export default function GoogleSheetsSync({
   const handleExportToGoogleSheetsOnline = async () => {
     const spreadsheetId = parseSpreadsheetId(spreadsheetUrl);
     if (!spreadsheetId) {
-      setStatusMsg({ type: 'error', text: '請輸入有效的 Google 試算表連結或 ID！' });
+      setStatusMsg({ type: 'error', text: t('sync.url_error_empty') });
       return;
     }
     if (!oauthAccessToken.trim()) {
-      setStatusMsg({ type: 'error', text: '寫入/覆蓋雲端試算表通常需要提供 OAuth Access Token (存取權標)！' });
+      setStatusMsg({ type: 'error', text: t('sync.export_error_token') });
       return;
     }
 
@@ -394,10 +396,10 @@ export default function GoogleSheetsSync({
 
       setStatusMsg({
         type: 'success',
-        text: `完美覆蓋！已將本機櫃的 ${projects.length} 筆專案寫入 Google Sheets 中的工作表「${sheetName}」！`
+        text: t('sync.export_success', { count: projects.length, sheetName })
       });
     } catch (err: any) {
-      setStatusMsg({ type: 'error', text: `同步匯出至 Google Sheets 失敗: ${err.message}` });
+      setStatusMsg({ type: 'error', text: `${t('sync.export_fail')}${err.message}` });
     } finally {
       setLoading(false);
     }
@@ -412,14 +414,14 @@ export default function GoogleSheetsSync({
       >
         {/* Decorative corner tag */}
         <div className="absolute top-0 right-12 bg-emerald-800 text-amber-50 font-mono text-[9px] font-bold py-1 px-3 rounded-b-xs shadow-xs tracking-wider">
-          GOOGLE SHEETS UNIT
+          {t('sync.modal_tag')}
         </div>
 
         {/* Modal close icon */}
         <button 
           onClick={onClose}
           className="absolute top-4 right-4 text-stone-500 hover:text-stone-800 transition-colors p-1"
-          title="關閉"
+          title={t('sync.close')}
         >
           <X className="w-5 h-5" />
         </button>
@@ -428,10 +430,10 @@ export default function GoogleSheetsSync({
         <div className="pb-3 border-b border-dashed border-[#dfccb7] mb-4">
           <h2 className="font-serif text-lg font-black text-kraft-900 tracking-tight flex items-center gap-1.5 leading-none">
             <FileSpreadsheet className="w-5 h-5 text-emerald-800" />
-            雲端同步櫃 · GOOGLE SHEETS
+            {t('sync.modal_title')}
           </h2>
           <p className="font-mono text-[10px] text-kraft-600 mt-1 uppercase">
-            ESTABLISH STABLE SPREADSHEET LEDGER EXCHANGE SYSTEMS
+            {t('sync.modal_subtitle')}
           </p>
         </div>
 
@@ -445,7 +447,7 @@ export default function GoogleSheetsSync({
                 : 'bg-kraft-100/50 hover:bg-kraft-200/50 text-stone-700'
             }`}
           >
-            直接 API 同步 (LIVE API)
+            {t('sync.tab_live_api')}
           </button>
           <button
             onClick={() => setActiveTab('quick-paste')}
@@ -455,7 +457,7 @@ export default function GoogleSheetsSync({
                 : 'bg-kraft-100/50 hover:bg-kraft-200/50 text-stone-700'
             }`}
           >
-            一秒 Ctrl+C 貼上匯入
+            {t('sync.tab_quick_paste')}
           </button>
           <button
             onClick={() => setActiveTab('csv')}
@@ -465,7 +467,7 @@ export default function GoogleSheetsSync({
                 : 'bg-kraft-100/50 hover:bg-kraft-200/50 text-stone-700'
             }`}
           >
-            本地備份 (CSV EXPORT)
+            {t('sync.tab_csv_export')}
           </button>
         </div>
 
@@ -487,8 +489,7 @@ export default function GoogleSheetsSync({
         {activeTab === 'api' && (
           <div className="space-y-3.5">
             <div className="text-[11px] font-serif text-stone-700 leading-relaxed bg-[#f6ebd9]/40 border border-kraft-300/40 p-2.5 rounded-xs">
-              <span className="font-bold text-kraft-900 block mb-1">💡 快捷指引 (Sheet Schema Setup):</span>
-              您的 Google Sheet 第一行需填寫以下欄位（大小寫不限）：
+              <span dangerouslySetInnerHTML={{ __html: t('sync.schema_guide') }} />
               <code className="block mt-1 p-1 bg-stone-800/10 rounded-xs font-mono text-[9px] text-stone-800 select-all overflow-x-auto whitespace-nowrap">
                 ID, Title, Subtitle, Description, Content, Status, Category, Date, ArchiveNo, Tags, Link, Attachments
               </code>
@@ -496,11 +497,11 @@ export default function GoogleSheetsSync({
 
             <div>
               <label className="block font-mono text-[10px] font-bold text-kraft-800 uppercase mb-1">
-                Google 試算表連結 (Spreadsheet URL)
+                {t('sync.url_label')}
               </label>
               <input
                 type="text"
-                placeholder="貼上您的試算表 URL（例: https://docs.google.com/spreadsheets/d/ ...）"
+                placeholder={t('sync.url_placeholder')}
                 value={spreadsheetUrl}
                 onChange={(e) => setSpreadsheetUrl(e.target.value)}
                 className="w-full px-2.5 py-1.5 bg-[#FAF2E5] border border-kraft-400 rounded-xs font-mono text-xs text-stone-800 focus:outline-none focus:border-emerald-700"
@@ -510,11 +511,11 @@ export default function GoogleSheetsSync({
             <div className="grid grid-cols-2 gap-3">
               <div>
                 <label className="block font-mono text-[10px] font-bold text-kraft-800 uppercase mb-1">
-                  工作表名稱 (Sheet/Tab Name)
+                  {t('sync.sheet_name_label')}
                 </label>
                 <input
                   type="text"
-                  placeholder="工作表名稱，預設為 Sheet1"
+                  placeholder={t('sync.sheet_name_placeholder')}
                   value={sheetName}
                   onChange={(e) => setSheetName(e.target.value)}
                   className="w-full px-2.5 py-1.5 bg-[#FAF2E5] border border-kraft-400 rounded-xs font-mono text-xs text-stone-800 focus:outline-none focus:border-emerald-700"
@@ -523,11 +524,11 @@ export default function GoogleSheetsSync({
 
               <div>
                 <label className="block font-mono text-[10px] font-bold text-kraft-800 uppercase mb-1">
-                  API 金鑰（用於讀取公開試算表）
+                  {t('sync.api_key_label')}
                 </label>
                 <input
                   type="password"
-                  placeholder="可選貼上 API Key 或省略"
+                  placeholder={t('sync.api_key_placeholder')}
                   value={sheetsApiKey}
                   onChange={(e) => setSheetsApiKey(e.target.value)}
                   className="w-full px-2.5 py-1.5 bg-[#FAF2E5] border border-kraft-400 rounded-xs font-mono text-xs text-stone-800 focus:outline-none focus:border-emerald-700"
@@ -537,17 +538,17 @@ export default function GoogleSheetsSync({
 
             <div>
               <label className="block font-mono text-[10px] font-bold text-kraft-800 uppercase mb-1">
-                Google OAuth 存取權標 (Access Token - 用於無缝讀寫)
+                {t('sync.oauth_label')}
               </label>
               <input
                 type="password"
-                placeholder="貼上您的 Access Token 以往返讀寫您的私人試算表"
+                placeholder={t('sync.oauth_placeholder')}
                 value={oauthAccessToken}
                 onChange={(e) => setOauthAccessToken(e.target.value)}
                 className="w-full px-2.5 py-1.5 bg-[#FAF2E5] border border-kraft-400 rounded-xs font-mono text-xs text-stone-800 focus:outline-none focus:border-emerald-700"
               />
               <p className="font-mono text-[9px] text-stone-500 mt-1">
-                備註：Google 設有跨網域安全機制，存取私人試算表、或寫入數據到試算表時，必須使用 OAuth Token。
+                {t('sync.oauth_note')}
               </p>
             </div>
 
@@ -558,7 +559,7 @@ export default function GoogleSheetsSync({
                 className="flex-1 inline-flex items-center justify-center gap-1.5 px-4 py-2.5 bg-emerald-800 hover:bg-emerald-900 disabled:bg-stone-400 text-amber-50 font-mono text-xs font-black rounded-xs transition-colors cursor-pointer"
               >
                 <CloudDownload className="w-4 h-4" />
-                <span>{loading ? '加載中...' : '從 Google 試算表拉取'}</span>
+                <span>{loading ? t('sync.pulling_btn') : t('sync.pull_btn')}</span>
               </button>
 
               <button
@@ -567,7 +568,7 @@ export default function GoogleSheetsSync({
                 className="flex-1 inline-flex items-center justify-center gap-1.5 px-4 py-2.5 bg-[#FAF2E5] hover:bg-stone-50 border-2 border-emerald-800 disabled:border-stone-400 text-emerald-800 disabled:text-stone-400 font-mono text-xs font-black rounded-xs transition-colors cursor-pointer"
               >
                 <CloudUpload className="w-4 h-4" />
-                <span>{loading ? '匯出中...' : '覆蓋至 Google 試算表'}</span>
+                <span>{loading ? t('sync.pushing_btn') : t('sync.push_btn')}</span>
               </button>
             </div>
           </div>
@@ -576,22 +577,21 @@ export default function GoogleSheetsSync({
         {activeTab === 'quick-paste' && (
           <div className="space-y-4">
             <div className="text-xs font-serif text-stone-700 leading-relaxed bg-amber-50 border border-kraft-300 p-3 rounded-xs">
-              <span className="font-bold text-kraft-900 block mb-1">📢 極速免認證方案 (Zero-Setup Paste Import):</span>
-              這是不需要申請任何 Google Cloud 憑證的最穩健做法！
-              <ol className="list-decimal list-inside space-y-1 mt-1 font-medium pl-1">
-                <li> 打開您的 Google 試算表。</li>
-                <li> 框選所有儲存格，按 <kbd className="px-1 py-0.5 bg-stone-200 border rounded font-mono text-[10px] text-stone-800">Ctrl+C</kbd>（複製）。</li>
-                <li> 回到這裡，將內容直接 <kbd className="px-1 py-0.5 bg-stone-200 border rounded font-mono text-[10px] text-stone-800">Ctrl+V</kbd> 貼在下方，點擊下方按鈕即可完美寫入！</li>
-              </ol>
+              <span className="font-bold text-kraft-900 block mb-1">{t('sync.zero_setup_title')}</span>
+              {t('sync.zero_setup_note')}
+              <ol 
+                className="list-decimal list-inside space-y-1 mt-1 font-medium pl-1"
+                dangerouslySetInnerHTML={{ __html: t('sync.zero_setup_steps') }}
+              />
             </div>
 
             <div>
               <label className="block font-mono text-[10px] font-bold text-kraft-800 uppercase mb-1">
-                貼上複製品的工作表矩陣資料 (Paste Sheets Cells)
+                {t('sync.paste_label')}
               </label>
               <textarea
                 rows={5}
-                placeholder="在此貼上您從 Google 試算表複製的矩陣單元格內容..."
+                placeholder={t('sync.paste_placeholder')}
                 value={pasteData}
                 onChange={(e) => setPasteData(e.target.value)}
                 className="w-full p-2.5 bg-[#FAF2E5] border border-kraft-400 rounded-xs font-mono text-[11px] text-stone-800 focus:outline-none focus:border-emerald-700"
@@ -603,7 +603,7 @@ export default function GoogleSheetsSync({
               className="w-full inline-flex items-center justify-center gap-1.5 px-4 py-2.5 bg-emerald-800 hover:bg-emerald-900 text-amber-50 font-mono text-xs font-black rounded-xs transition-colors cursor-pointer"
             >
               <Clipboard className="w-4 h-4" />
-              <span>完美載入試算表貼文 (LOAD PASTED)</span>
+              <span>{t('sync.paste_load_btn')}</span>
             </button>
           </div>
         )}
@@ -611,19 +611,20 @@ export default function GoogleSheetsSync({
         {activeTab === 'csv' && (
           <div className="space-y-4">
             <div className="text-xs font-serif text-stone-700 leading-relaxed bg-[#f6ebd9]/40 border border-kraft-300/40 p-3.5 rounded-xs">
-              <span className="font-bold text-kraft-900 block mb-1">💾 雙向支援 (Google Sheets Compatible CSV):</span>
-              此選項會將您本機檔案室中儲存的所有文件，打包導出為一個帶有完整 **BOM (Byte Order Mark) 萬國編碼** 的高階 CSV 檔案。
-              您可以將該檔案直接置入、或使用匯入功能在 Google Sheets、Excel 中打開，絕不出現亂碼。
+              <span className="font-bold text-kraft-900 block mb-1">{t('sync.csv_title')}</span>
+              {t('sync.csv_note')}
             </div>
 
             <div className="p-4 bg-stone-200/40 rounded-xs border border-dashed border-kraft-400 text-center">
-              <div className="font-mono text-xs font-bold text-stone-700 mb-2">當前目錄儲備：{projects.length} 個文件卡</div>
+              <div className="font-mono text-xs font-bold text-stone-700 mb-2">
+                {t('sync.csv_local_stock', { count: projects.length })}
+              </div>
               <button
                 onClick={handleExportCSV}
                 className="inline-flex items-center gap-2 px-6 py-2.5 bg-kraft-800 hover:bg-kraft-900 text-[#FAF2E5] font-mono text-xs font-bold rounded-xs shadow-xs transition-all cursor-pointer"
               >
                 <CloudUpload className="w-4 h-4" />
-                <span>立即下載 CSV 備份檔案</span>
+                <span>{t('sync.csv_download_btn')}</span>
               </button>
             </div>
           </div>
