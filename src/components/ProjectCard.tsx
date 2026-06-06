@@ -95,11 +95,11 @@ export default function ProjectCard({ project, index, onSelect, customPresets = 
     if (custom) return custom.label;
 
     switch (cat) {
-      case 'code': return t('card.category_code_long');
-      case 'design': return t('card.category_design_long');
-      case 'research': return t('card.category_research_long');
-      case 'lab': return t('card.category_lab_long');
-      case 'writing': return t('card.category_writing_long');
+      case 'code': return 'Code';
+      case 'design': return 'Design';
+      case 'research': return 'Research';
+      case 'lab': return 'Lab';
+      case 'writing': return 'Doc';
       default: return cat.toUpperCase();
     }
   };
