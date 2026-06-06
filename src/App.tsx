@@ -85,12 +85,10 @@ export default function App() {
 
   // Google Sheets Interlink states initialized from localStorage, falling back to Vite environment defaults for visitors
   const [sheetUrl, setSheetUrl] = useState(() => {
-    // @ts-ignore
-    return localStorage.getItem('ramulab_sheet_url') || import.meta.env.VITE_DEFAULT_SHEET_URL || '';
+    return localStorage.getItem('ramulab_sheet_url') || 'https://docs.google.com/spreadsheets/d/1jrryb36AD79_L2CLQxs48prPJ-iK2Kthn_tu0fzHVsc/edit?usp=sharing';
   });
   const [sheetName, setSheetName] = useState(() => {
-    // @ts-ignore
-    return localStorage.getItem('ramulab_sheet_name') || import.meta.env.VITE_DEFAULT_SHEET_NAME || '';
+    return localStorage.getItem('ramulab_sheet_name') || 'Projects';
   });
   const [isSyncing, setIsSyncing] = useState(false);
   const [syncError, setSyncError] = useState<string | null>(null);
@@ -422,17 +420,18 @@ ${description}`;
 
   // Reset to static defaults (safety backup)
   const handleResetDefaults = () => {
-    if (confirm('確定要清除當前 Google 試算表連線設定，放回系統初始示範卡嗎？')) {
+    if (confirm('確定要清除自訂設定，並重置回您的預設 Google 試算表嗎？')) {
       localStorage.removeItem('ramulab_sheet_url');
       localStorage.removeItem('ramulab_sheet_name');
       localStorage.removeItem('ramulab_custom_presets');
-      setSheetUrl('');
-      setSheetName('Sheet1');
+      const defaultUrl = 'https://docs.google.com/spreadsheets/d/1jrryb36AD79_L2CLQxs48prPJ-iK2Kthn_tu0fzHVsc/edit?usp=sharing';
+      const defaultName = 'Projects';
+      setSheetUrl(defaultUrl);
+      setSheetName(defaultName);
       setCustomPresets([]);
       setSyncSuccess(false);
       setSyncError(null);
-      setProjects(INITIAL_PROJECTS);
-      saveProjects(INITIAL_PROJECTS);
+      handleSyncSheet(defaultUrl, defaultName);
     }
   };
 
