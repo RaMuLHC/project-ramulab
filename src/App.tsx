@@ -5,7 +5,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { ProjectEntry, ArchiveStats, CustomPreset } from './types';
-import { getStoredProjects, saveProjects, INITIAL_PROJECTS } from './data/projects';
+import { getStoredProjects, saveProjects } from './data/projects';
 import ProjectCard from './components/ProjectCard';
 import ProjectDetailDialog from './components/ProjectDetailDialog';
 import ArchiveHeader from './components/ArchiveHeader';
@@ -475,7 +475,7 @@ ${description}`;
               {language === 'zh' && (
                 <motion.div layoutId="activeLang" className="absolute inset-0 bg-kraft-800 rounded-xs -z-10 shadow-xs" />
               )}
-              中 · ZH
+               中
             </button>
             <button 
               onClick={() => setLanguage('en')}

@@ -5,7 +5,7 @@
 
 import React from 'react';
 import { ProjectEntry, CustomPreset } from '../types';
-import { Calendar, FileText, ExternalLink, Paperclip } from 'lucide-react';
+import { ExternalLink } from 'lucide-react';
 import { motion } from 'motion/react';
 import { useTranslation } from '../i18n';
 
